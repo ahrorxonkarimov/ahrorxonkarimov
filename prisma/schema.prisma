@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// Admin Users
+// ----------------------------------------------------
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // In production, this should be a hashed password
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ----------------------------------------------------
+// Contact Messages (Aloqa formasi)
+// ----------------------------------------------------
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ----------------------------------------------------
+// Posts (Maqolalar / Yangiliklar)
+// ----------------------------------------------------
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   // Markdown content
+  coverImage  String?
+  status      String   @default("DRAFT") // DRAFT or PUBLISHED
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ----------------------------------------------------
+// Materials (Hujjatlar: pdf, docx, xlsx)
+// ----------------------------------------------------
+model Material {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  format      String   // e.g. "PDF", "DOCX"
+  sizeBytes   Int
+  fileUrl     String
+  createdAt   DateTime @default(now())
+}
+
+// ----------------------------------------------------
+// Media (Images)
+// ----------------------------------------------------
+model Media {
+  id          String   @id @default(cuid())
+  filename    String
+  title       String?
+  sizeBytes   Int
+  mimeType    String
+  fileUrl     String
+  createdAt   DateTime @default(now())
+}
