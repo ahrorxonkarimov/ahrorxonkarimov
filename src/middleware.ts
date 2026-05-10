@@ -8,21 +8,11 @@ export function middleware(request: NextRequest) {
 
   const isAdminDomain = hostname === "abdulloh.ahrorxon.uz";
   
-  // 1. Agar abdulloh.ahrorxon.uz orqali kirsak, avtomatik /admin ga yo'naltiramiz
-  if (isAdminDomain && path === "/") {
-    return NextResponse.rewrite(new URL('/admin', request.url));
-  }
-
-  // Yoki abdulloh.ahrorxon.uz/... kelsa, uni /admin/... deb o'qiymiz
-  if (isAdminDomain && !path.startsWith("/admin")) {
-    return NextResponse.rewrite(new URL(`/admin${path}`, request.url));
-  }
-
-  // 2. Auth tekshiruvi (faqat /admin yo'llari uchun)
   const isAuth = request.cookies.get('admin_auth')?.value === 'true';
   const isAdminPath = path.startsWith('/admin') || isAdminDomain;
   const isLoginPath = path === '/admin/login' || (isAdminDomain && path === '/login');
 
+  // Auth tekshiruvi (faqat /admin yo'llari yoki admin domen uchun)
   if (isAdminPath && !isLoginPath) {
     if (!isAuth) {
       // Login sahifasiga yuboramiz
@@ -35,6 +25,16 @@ export function middleware(request: NextRequest) {
   if (isLoginPath && isAuth) {
     const dashboardUrl = isAdminDomain ? new URL('/', request.url) : new URL('/admin', request.url);
     return NextResponse.redirect(dashboardUrl);
+  }
+
+  // Domain rewrites (abdulloh.ahrorxon.uz orqali kirganda)
+  if (isAdminDomain) {
+    if (path === "/") {
+      return NextResponse.rewrite(new URL('/admin', request.url));
+    }
+    if (!path.startsWith("/admin")) {
+      return NextResponse.rewrite(new URL(`/admin${path}`, request.url));
+    }
   }
 
   return NextResponse.next();
