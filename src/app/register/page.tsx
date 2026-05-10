@@ -1,28 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, LogIn, ArrowLeft, Mail, Lock, AlertCircle } from "lucide-react";
+import { UserPlus, ArrowLeft, Mail, Lock, AlertCircle, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/app/actions/auth";
+import { registerUser } from "@/app/actions/auth";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (formData: FormData) => {
+  const handleRegister = async (formData: FormData) => {
     setIsLoading(true);
     setError("");
 
     try {
-      const result = await loginUser(formData);
+      const result = await registerUser(formData);
       if (result.error) {
         setError(result.error);
         setIsLoading(false);
       } else {
-        router.push("/admin"); // Redirecting to admin for now as it's the main entry
+        router.push("/admin"); // For now, the user can go to admin if they are an admin
         router.refresh();
       }
     } catch (err) {
@@ -40,16 +40,16 @@ export default function LoginPage() {
       >
         <div className="flex justify-center">
           <div className="h-20 w-20 rounded-3xl bg-primary/10 flex items-center justify-center text-primary">
-            <User className="h-10 w-10" />
+            <UserPlus className="h-10 w-10" />
           </div>
         </div>
         
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-black tracking-tight uppercase text-foreground">Kirish</h1>
-          <p className="text-muted-foreground font-medium">Shaxsiy profilga o&apos;tish</p>
+          <h1 className="text-3xl font-black tracking-tight uppercase text-foreground">Ro&apos;yxatdan o&apos;tish</h1>
+          <p className="text-muted-foreground font-medium">Yangi profil yarating</p>
         </div>
 
-        <form action={handleLogin} className="space-y-4">
+        <form action={handleRegister} className="space-y-4">
           {error && (
             <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-500/10 rounded flex items-center gap-2">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -58,6 +58,17 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-4">
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <input
+                type="text"
+                name="name"
+                required
+                className="w-full pl-12 pr-4 py-4 rounded-2xl border bg-background focus:ring-2 focus:ring-primary outline-none"
+                placeholder="To'liq ismingiz"
+              />
+            </div>
+
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <input
@@ -75,8 +86,9 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 required
+                minLength={6}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl border bg-background focus:ring-2 focus:ring-primary outline-none"
-                placeholder="Parol"
+                placeholder="Parol (kamida 6 ta belgi)"
               />
             </div>
           </div>
@@ -86,14 +98,14 @@ export default function LoginPage() {
             disabled={isLoading}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-white font-black uppercase tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-70"
           >
-            {isLoading ? "Kirilmoqda..." : <><LogIn className="h-5 w-5" /> Kirish</>}
+            {isLoading ? "Yaratilmoqda..." : <><UserPlus className="h-5 w-5" /> Ro&apos;yxatdan o&apos;tish</>}
           </button>
         </form>
 
         <div className="text-center space-y-4">
           <p className="text-sm text-muted-foreground font-medium">
-            Akkauntingiz yo&apos;qmi?{" "}
-            <Link href="/register" className="text-primary hover:underline">Ro&apos;yxatdan o&apos;tish</Link>
+            Akkauntingiz bormi?{" "}
+            <Link href="/login" className="text-primary hover:underline">Kirish</Link>
           </p>
           
           <Link 
