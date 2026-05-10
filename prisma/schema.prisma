@@ -72,3 +72,18 @@ model Media {
   fileUrl     String
   createdAt   DateTime @default(now())
 }
+
+// ----------------------------------------------------
+// Projects (Loyihalar)
+// ----------------------------------------------------
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  link        String?
+  tags        String   // comma separated tags
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

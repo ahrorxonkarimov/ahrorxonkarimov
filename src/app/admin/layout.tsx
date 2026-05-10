@@ -65,13 +65,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="p-3 border-t">
-          <button onClick={() => {
-            document.cookie = "admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+          <form action={async () => {
+            const { logoutUser } = await import("@/app/actions/auth");
+            await logoutUser();
             window.location.href = "/admin/login";
-          }} className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded transition-colors">
-            <LogOut className="h-4 w-4" />
-            Tizimdan chiqish
-          </button>
+          }}>
+            <button type="submit" className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded transition-colors">
+              <LogOut className="h-4 w-4" />
+              Tizimdan chiqish
+            </button>
+          </form>
         </div>
       </aside>
 

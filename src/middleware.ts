@@ -8,9 +8,9 @@ export function middleware(request: NextRequest) {
 
   const isAdminDomain = hostname === "abdulloh.ahrorxon.uz";
   
-  const isAuth = request.cookies.get('admin_auth')?.value === 'true';
+  const isAuth = request.cookies.get('admin_auth')?.value !== undefined && request.cookies.get('admin_auth')?.value !== '';
   const isAdminPath = path.startsWith('/admin') || isAdminDomain;
-  const isLoginPath = path === '/admin/login' || (isAdminDomain && path === '/login');
+  const isLoginPath = path === '/admin/login' || path === '/admin/register' || (isAdminDomain && (path === '/login' || path === '/register'));
 
   // Auth tekshiruvi (faqat /admin yo'llari yoki admin domen uchun)
   if (isAdminPath && !isLoginPath) {
