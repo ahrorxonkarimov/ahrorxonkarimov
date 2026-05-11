@@ -48,13 +48,14 @@ export async function trackVisitor(path: string) {
 
 export async function getVisitors() {
   try {
+    // Check if table exists by doing a simple count or query
     const visitors = await prisma.visitor.findMany({
       orderBy: { updatedAt: "desc" },
-      take: 100, // Get last 100
+      take: 100,
     });
     return { visitors };
   } catch (error) {
-    console.error("Failed to fetch visitors:", error);
+    console.error("Visitors table might not exist yet:", error);
     return { visitors: [] };
   }
 }
