@@ -1,9 +1,11 @@
-"use client";
+// Server component
 
-import { Users, FileText, FolderOpen, Eye, TrendingUp, Clock, ArrowRight, MessageSquare } from "lucide-react";
+import { Users, FileText, FolderOpen, Eye, TrendingUp, Clock, ArrowRight, MessageSquare, Activity } from "lucide-react";
 import Link from "next/link";
+import { getVisitors } from "@/app/actions/visitors";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const { visitors } = await getVisitors();
   const stats = [
     { label: "Foydalanuvchilar", value: "24", icon: Users, change: "+3 bu hafta", href: "/admin/users" },
     { label: "Maqolalar", value: "12", icon: FileText, change: "4 ta qoralama", href: "/admin/posts" },
@@ -72,24 +74,48 @@ export default function AdminDashboard() {
         </Link>
       </div>
 
-      {/* Recent Activity */}
-      <div className="border rounded-lg overflow-hidden">
-        <div className="px-4 py-3 bg-card border-b">
-          <h2 className="text-sm font-bold">So&apos;nggi faoliyat</h2>
+      {/* Recent Activity & Visitors */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <div className="px-4 py-3 border-b">
+            <h2 className="text-sm font-bold">So&apos;nggi faoliyat</h2>
+          </div>
+          <div className="divide-y">
+            {recentActivity.map((item, i) => (
+              <div key={i} className="px-4 py-3 flex items-center justify-between gap-4 hover:bg-accent/50 transition-colors">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm truncate">{item.action}</p>
+                    <p className="text-xs text-muted-foreground">{item.user}</p>
+                  </div>
+                </div>
+                <span className="text-xs text-muted-foreground whitespace-nowrap">{item.time}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="divide-y">
-          {recentActivity.map((item, i) => (
-            <div key={i} className="px-4 py-3 flex items-center justify-between gap-4 hover:bg-accent/50 transition-colors">
-              <div className="flex items-center gap-3 min-w-0">
-                <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <div className="min-w-0">
-                  <p className="text-sm truncate">{item.action}</p>
-                  <p className="text-xs text-muted-foreground">{item.user}</p>
+
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <div className="px-4 py-3 border-b flex items-center justify-between">
+            <h2 className="text-sm font-bold flex items-center gap-2"><Activity className="h-4 w-4 text-primary" /> Saytga kirganlar (IP)</h2>
+          </div>
+          <div className="divide-y max-h-[300px] overflow-y-auto">
+            {visitors && visitors.length > 0 ? visitors.map((visitor, i) => (
+              <div key={i} className="px-4 py-3 hover:bg-accent/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">{visitor.ip}</p>
+                  <span className="text-xs px-2 py-0.5 rounded bg-secondary">{visitor.visits} marta</span>
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-xs text-muted-foreground truncate max-w-[200px]">{visitor.path}</p>
+                  <p className="text-[10px] text-muted-foreground">{new Date(visitor.updatedAt).toLocaleString()}</p>
                 </div>
               </div>
-              <span className="text-xs text-muted-foreground whitespace-nowrap">{item.time}</span>
-            </div>
-          ))}
+            )) : (
+              <div className="px-4 py-8 text-center text-muted-foreground text-sm">Hali tashriflar yo&apos;q</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

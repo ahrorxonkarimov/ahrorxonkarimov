@@ -6,6 +6,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FloatingActionButton from "@/components/FloatingActionButton";
 import { SITE_CONFIG } from "@/lib/constants";
+import VisitorTracker from "@/components/VisitorTracker";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -40,6 +41,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
             <FloatingActionButton />
+            <VisitorTracker />
           </div>
         </ThemeProvider>
       </body>

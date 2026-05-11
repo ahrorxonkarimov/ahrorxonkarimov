@@ -87,3 +87,16 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+// ----------------------------------------------------
+// Visitors (Foydalanuvchilar ma'lumotlari)
+// ----------------------------------------------------
+model Visitor {
+  id        String   @id @default(cuid())
+  ip        String
+  userAgent String?
+  path      String
+  visits    Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

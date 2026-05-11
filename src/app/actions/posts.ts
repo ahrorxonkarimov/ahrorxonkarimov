@@ -24,8 +24,10 @@ export async function createPost(formData: FormData) {
     return { error: "Iltimos, sarlavha va matnni kiriting." };
   }
   
-  // Simple slug generation
-  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+  // Generate slug, fallback to timestamp if empty (e.g. for non-latin characters)
+  let slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+  if (!slug) slug = `post-${Date.now()}`;
+  else slug = `${slug}-${Date.now()}`;
   
   try {
     await prisma.post.create({

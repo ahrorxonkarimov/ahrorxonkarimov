@@ -20,10 +20,14 @@ export default function MediaClient({ initialMedia }: { initialMedia: any[] }) {
     formData.append("fileUrl", fileUrl);
 
     try {
-      await createMedia(formData);
-      setIsUploading(false);
-      setFilename("");
-      setFileUrl("");
+      const result = await createMedia(formData);
+      if (result?.error) {
+        alert(result.error);
+      } else {
+        setIsUploading(false);
+        setFilename("");
+        setFileUrl("");
+      }
     } catch (error) {
       console.error("Failed to add media:", error);
     } finally {

@@ -17,10 +17,14 @@ export default function PostsClient({ initialPosts }: { initialPosts: any[] }) {
     formData.append("content", content);
     formData.append("status", "E'lon qilingan");
     
-    await createPost(formData);
-    setIsComposing(false);
-    setTitle("");
-    setContent("");
+    const result = await createPost(formData);
+    if (result?.error) {
+      alert(result.error);
+    } else {
+      setIsComposing(false);
+      setTitle("");
+      setContent("");
+    }
     setIsSubmitting(false);
   };
 

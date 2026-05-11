@@ -23,11 +23,15 @@ export default function MaterialsClient({ initialMaterials }: { initialMaterials
     formData.append("fileUrl", fileUrl || "https://example.com/placeholder.pdf"); // Placeholder for now
 
     try {
-      await createMaterial(formData);
-      setIsUploading(false);
-      setTitle("");
-      setDescription("");
-      setFileUrl("");
+      const result = await createMaterial(formData);
+      if (result?.error) {
+        alert(result.error);
+      } else {
+        setIsUploading(false);
+        setTitle("");
+        setDescription("");
+        setFileUrl("");
+      }
     } catch (error) {
       console.error("Failed to create material:", error);
     } finally {

@@ -23,12 +23,16 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
     formData.append("tags", tags);
 
     try {
-      await createProject(formData);
-      setIsAdding(false);
-      setTitle("");
-      setDescription("");
-      setLink("");
-      setTags("");
+      const result = await createProject(formData);
+      if (result?.error) {
+        alert(result.error);
+      } else {
+        setIsAdding(false);
+        setTitle("");
+        setDescription("");
+        setLink("");
+        setTags("");
+      }
     } catch (error) {
       console.error("Failed to create project:", error);
     } finally {
