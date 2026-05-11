@@ -37,7 +37,8 @@ export async function loginUser(formData: FormData) {
     .setExpirationTime("1d")
     .sign(encodedSecret);
 
-  cookies().set("admin_auth", token, {
+  const cookieStore = await cookies();
+  cookieStore.set("admin_auth", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -83,7 +84,8 @@ export async function registerUser(formData: FormData) {
     .setExpirationTime("1d")
     .sign(encodedSecret);
 
-  cookies().set("admin_auth", token, {
+  const cookieStore = await cookies();
+  cookieStore.set("admin_auth", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -95,6 +97,7 @@ export async function registerUser(formData: FormData) {
 }
 
 export async function logoutUser() {
-  cookies().delete("admin_auth");
+  const cookieStore = await cookies();
+  cookieStore.delete("admin_auth");
   return { success: true };
 }
